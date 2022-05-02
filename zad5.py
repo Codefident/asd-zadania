@@ -24,8 +24,6 @@
 # chodzi tylko o ich wielkość i o to czy są przed nami czy nie.
 # Stąd konieczność posortowania listy wynikowej.
 
-# =================== POPRAWNOŚĆ ALGORYTMU ===================
-
 
 from zad5testy import runtests
 from queue import PriorityQueue
