@@ -1,4 +1,21 @@
-# name
+# Piotr Klęp
+
+# W algorytmie brałem pod uwagę 3 przypadki:
+#     - k == 0 --> zwracamy p ( O(1) )
+#     - k == 1 --> bubble sort
+#           złożoność obliczeniowa - O(n)
+#     - k > 1 --> heap sort
+#           złożoność obliczeniowa - O(n*log(k))
+
+#     Bubble sort wykonuje tylko jedną iterację po tablicy porównując sąsiednie elementy tylko raz
+
+#     Heap sort natomiast opiera się na konstrukcji kopca gdzie w każdym rodzicu jest wartość
+#     MNIEJSZA lub równa względem wartości dzieci. Dzięki temu najmniejsza wartość w prawidłowym
+#     kopcu znajduje się na indeksie 0 i jest dzięki temu łatwo osiągalna.
+#     Bazuję na tablicy k+1 elementowej, tworzę z niej kopiec po czym wybierając z niej najmniejszą
+#     wartość dołączam ją do posortowanej listy odsyłaczowej, a w kopcu zastępuję tę wartość kolejną
+#     spoza kopca itd aż do momentu gdy skończy sięst lista a naępnie skończy się kopiec.
+#     Lista do której dołączaliśmy elementy z kopca jest już listą posortowaną.
 
 from zad1testy import Node, runtests
 
@@ -40,25 +57,16 @@ def heapPop(A, n):
 
 
 def heapSort(p, k):
-
     item = p
 
     # A - tablica na k+1 pierwszych wskaźników
-    # A = [None for _ in range(k + 1)]
-    # i = 0
-    # while i < k + 1 and item != None:
-    #     A[i] = item
-    #     item = item.next # item wskazuje na pierszy element następujący zaraz po ostatnim z listy A
-    #     i += 1
-    # k = i
-    
     A = []
     i = 0
     while i < k + 1 and item != None:
         A.append(item)
         item = item.next # item wskazuje na pierszy element następujący zaraz po ostatnim z listy A
         i += 1
-    k = len(A)
+    k = i
 
     buildHeap(A, k)
 
@@ -88,6 +96,7 @@ def heapSort(p, k):
     # dodanie do listy ostatniego elementu i zakończenie jej None'm
     prev_item.next = A[0]
     prev_item.next.next = None
+
     return p
 
 
@@ -118,17 +127,12 @@ def bubbleSort(p):
 
 def SortH(p,k):
 
-    # O(1)
     if k == 0:
         return p
 
-    # O(n)
     if k == 1:
         return bubbleSort(p)
 
     return heapSort(p, k)
-        
-    return p
-    pass
 
 runtests( SortH ) 
