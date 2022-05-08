@@ -1,5 +1,27 @@
 # Piotr Klęp
 
+# złożoność: O(V + E + k)
+# k - długość najkrótszej ścieżki
+
+# Najpierw algorytmem BFS przeszukuję graf, z tą różnicą, że w
+# wierzchołkach zapisuję parentów ze wszystkich najkrótszych ścieżek
+# jeżeli w tym wierzchołku się spotykają.
+
+
+# Następnie po odnalezieniu ścieżek (bądź też nie):
+
+# - zwracam None jeśli nie odnaleziono ścieżki
+
+# - zwracam docelowy wierzchołek oraz jego parenta jeżeli
+#   ma on tylko jednego parenta
+
+# - zwracam wynik funkcji reverseBFS(), która:
+#       kroczy wstecz po parentach do momentu, aż wszystkie
+#       najkrósze ścieżki spotkają się w jednym miejscu niebędącym
+#       wierzchołkiem początkowym s. Wtedy zwracam ten wierzchołek oraz
+#       jego parenta
+
+
 from math import inf
 from zad6testy import runtests
 from collections import deque
@@ -12,7 +34,7 @@ class Vertex:
         self.visited = False
 
 
-def reverseBFS(G: list, V: list[Vertex], Q: deque, t: int, s: int, d: int):
+def reverseBFS(G: list, V: list[Vertex], Q: deque, t: int, d: int):
 
     Q.clear()
 
@@ -22,8 +44,15 @@ def reverseBFS(G: list, V: list[Vertex], Q: deque, t: int, s: int, d: int):
     i = d - 1
     u: int
 
-    while len(Q) > 1 and i > 1:
+    while i > 1:
         u = Q.popleft()
+
+        if len(Q) == 1:
+            u = Q.popleft()
+
+            # prevent if graph's paths meet in one vertex and then again go to different vertexes
+            if len(V[V[u].parents[0]].parents) == 1:
+                break
 
         if V[u].d < i:
             i -= 1
@@ -75,16 +104,11 @@ def BFS(G: list, s: int, t: int):
                     Q.append(v)
                 else:
                     shortest_path_length = V[v].d
-                
-    print('\nKONIEC, znaleziono najkrotsze sciezki')
-    print(V[t].parents)
     
     if V[t].visited:
-
         if len(V[t].parents) == 1:
             return (t, V[t].parents[0])
-
-        return reverseBFS(G, V, Q, t, s, shortest_path_length)
+        return reverseBFS(G, V, Q, t, shortest_path_length)
         
     else:
         return None
