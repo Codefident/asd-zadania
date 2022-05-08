@@ -45,14 +45,15 @@ def reverseBFS(G: list, V: list[Vertex], Q: deque, t: int, d: int):
     u: int
 
     while i > 1:
-        u = Q.popleft()
 
         if len(Q) == 1:
             u = Q.popleft()
 
             # prevent if graph's paths meet in one vertex and then again go to different vertexes
-            if len(V[V[u].parents[0]].parents) == 1:
+            if len(V[u].parents) == 1:
                 break
+        else:
+            u = Q.popleft()
 
         if V[u].d < i:
             i -= 1
@@ -60,13 +61,12 @@ def reverseBFS(G: list, V: list[Vertex], Q: deque, t: int, d: int):
         # paths meet on vertex s - returns None
         if i == 1:
             return None
-            
+
         for v in V[u].parents:
             if v not in Q:
                 Q.append(v)
-                
+
     # paths meet before vertex s
-    u = V[u].parents[0]
     return (u, V[u].parents[0])
 
 
@@ -99,17 +99,17 @@ def BFS(G: list, s: int, t: int):
                 V[v].d = V[u].d + 1
                 V[v].parents.append(u)
                 V[v].visited = True
-                    
+
                 if v != t:
                     Q.append(v)
                 else:
                     shortest_path_length = V[v].d
-    
+
     if V[t].visited:
         if len(V[t].parents) == 1:
             return (t, V[t].parents[0])
         return reverseBFS(G, V, Q, t, shortest_path_length)
-        
+
     else:
         return None
 
