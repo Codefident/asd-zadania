@@ -49,7 +49,7 @@ def reverseBFS(G: list, V: list[Vertex], Q: deque, t: int, d: int):
         if len(Q) == 1:
             u = Q.popleft()
 
-            # prevent if graph's paths meet in one vertex and then again go to different vertexes
+            # same vertex AND same following path, preventing situation when paths spread out right after meeting at a vertex
             if len(V[u].parents) == 1:
                 break
         else:
@@ -58,7 +58,7 @@ def reverseBFS(G: list, V: list[Vertex], Q: deque, t: int, d: int):
         if V[u].d < i:
             i -= 1
 
-        # paths meet on vertex s - returns None
+        # paths meet at vertex s - returns None
         if i == 1:
             return None
 
