@@ -1,8 +1,10 @@
 # Piotr Klęp
 
+
 # === ZŁOŻONOŚĆ ===
 # obliczeniowa: O( E + ElogE + 2E(V + E) )
 # pamięciowa:   O( E + VE )
+
 
 # === OPIS DZIAŁANIA ===
 
@@ -14,6 +16,14 @@
 # 4. koniec pętli gdy ani nie wrzuciliśmy krawędzi ani nie usunęliśmy
 
 # spójność grafu sprawdzam BFSem
+
+
+# === POPRAWNOŚĆ ===
+
+# Algorytm niejako pełza po tablicy z krawędziami.
+# Rozwiązaniem jest grupa krawędzi gdzie wynik to różnica między najdłuższą a najktórszą
+# krawędzią w tej grupie (czyli na jej krańcach).
+# Poruszając się dwoma wskaźnikami po tablicy posortowanych wskaźników zawsze znajdziemy rozwiązanie.
 
 
 from collections import deque
@@ -66,7 +76,7 @@ def highway(A):
     # sortowanie krawedzi
     E.sort(key=lambda x: x[2])
 
-    # macierz
+    # lista z kolejkami na sąsiadów
     G = [deque() for _ in range(n)]
 
     for i in range(n - 1):
