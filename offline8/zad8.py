@@ -1,7 +1,8 @@
 # Piotr Klęp
 
 # === ZŁOŻONOŚĆ ===
-# O(szypko)
+# obliczeniowa: O( E + ElogE + 2E(V + E) )
+# pamięciowa:   O( E + VE )
 
 # === OPIS DZIAŁANIA ===
 
@@ -26,7 +27,9 @@ def d(a, b):
     return ceil(sqrt(x**2 + y**2))
 
 
+# BFS tylko z kontrolą 'wizyt'
 def isConnected(G):
+
     for neighbours in G:
         if len(neighbours) == 0:
             return False
