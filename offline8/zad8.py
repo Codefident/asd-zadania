@@ -6,8 +6,13 @@
 # === OPIS DZIAŁANIA ===
 
 # 1. zapisuję w liście E wszystkie krawędzie posortowane rosnąco wg długości.
-# 2. wrzucam do grafu (kolejki(!) sąsiadów) pierwsze |V| - 1 krawędzi z tej listy.
-# 3.
+# 2. wrzucam do grafu (lista kolejek(!) sąsiadów) pierwsze |V| - 1 krawędzi z tej listy.
+# 3. pętla:
+#   3a. jeśli graf jest spójny -> usuwamy najmniejszą krawędź z grafu
+#   3b. jeśli graf niespójny -> dodajemy do grafu kolejną krawędź z listy
+# 4. koniec pętli gdy ani nie wrzuciliśmy krawędzi ani nie usunęliśmy
+
+# spójność grafu sprawdzam BFSem
 
 
 from collections import deque
