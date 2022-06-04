@@ -13,4 +13,5 @@ def DFS(G):
         time += 1
         for u in G[v]:
             if not visited[u]:
+                parents[u] = v
                 DFSVisit(G, u)
