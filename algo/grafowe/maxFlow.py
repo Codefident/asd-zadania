@@ -1,59 +1,72 @@
 # problem maksymalnego przepływu
-# algorymt Forda-Fulkersona / Edmondsa-Karpa (BFS)
+# metoda Forda-Fulkersona / algorytm Edmondsa-Karpa
 
 from collections import deque
 
 
-def maxFlow(C, s, t):
+def bfs(C, F, C_res, s, t):
     n = len(C)
-    fmax = 0
-
-    P = [-1] * n  # poprzedniki
-    CfP = [None] * n
-    F = [[0 for _ in range(n)] for _ in range(n)]
+    parent = [-1] * n  # parenty
     Q = deque()
 
+    Q.append(s)
+    parent[s] = -2  # -2 ponieważ nie bierzemy pod uwagę źródła
+
+    while Q:
+        v = Q.popleft()
+
+        # sąsiedzi wierzchołka v
+        for u in range(n):
+
+            # obliczamy możliwą do wykorzystania przepustowość dla krawędzi w sieci rezydualnej ze wzoru
+            # c(v, u) - f(v, u)
+            res_capacity = C[v][u] - F[v][u]
+
+            # wykonujemy jeżeli daną krawędzią można jeszcze puścić trochę wody/paliwa
+            # oraz jeżeli nie odwiedziliśmy jeszcze danego wierzchołka
+            if res_capacity > 0 and parent[u] == -1:
+                parent[u] = v
+
+                # bierzemy mniejszą przepustowość (dla obecnego wierzchołka lub tę z parenta)
+                # chodzi o zależność większej przepustowości od mniejszej
+                C_res[u] = min(res_capacity, C_res[v])
+
+                # dotarcie do ujścia
+                if u == t:
+                    return (C_res[t], parent)
+
+                Q.append(u)
+
+    return (0, None)
+
+
+def maxFlow(C, s, t):
+    n = len(C)
+    fmax = 0  # max przepływ
+
+    C_res = [float('inf')] * n  # przepustowość sieci rezydualnej
+    F = [[0 for _ in range(n)] for _ in range(n)]  # aktualny przepływ w sieci
+
     while True:
-        for i in range(n):
-            P[i] = -1
+        # bfs szuka którędy jeszcze można puścić przepływ
+        flow, parents = bfs(C, F, C_res, s, t)
 
-        P[s] = -2
-        CfP[s] = float('inf')
-        Q.clear()
-        Q.append(s)
-        escape = False
-
-        while Q:
-            v = Q.popleft()
-
-            for u in range(n):
-                residual_capacity = C[v][u] - F[v][u]
-
-                if residual_capacity != 0 and P[u] == -1:
-                    P[u] = v
-                    CfP[u] = min(residual_capacity, CfP[v])
-
-                    # ścieżka kompletna jeśli...
-                    if u == t:
-                        fmax += CfP[t]
-
-                        i = u
-                        while i != s:
-                            x = P[i]
-                            F[x][i] += CfP[t]
-                            F[i][x] -= CfP[t]
-                            i = x
-                        escape = True
-                        break
-                    Q.append(u)
-            if escape:
-                break
-        if not escape:
+        # przepływ == 0 oznacza, że osiągneliśmy max przepływ
+        if flow == 0:
             break
-    for x in range(n):
-        for y in range(n):
-            if C[x][y]:
-                print(x, "->", y, ' ', F[x][y], ':', C[x][y])
+
+        # zwiększamy przepływ o nową ścieżkę
+        fmax += flow
+
+        # idąc od końca po parentach aktualizujemy listę z przepływem
+        v = t
+        while v != s:
+            p = parents[v]
+            F[p][v] += flow
+            F[v][p] -= flow
+            v = p
+
+    print(fmax)
 
 
 s = 0
